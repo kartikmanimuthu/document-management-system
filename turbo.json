@@ -1,0 +1,55 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDotEnv": [
+    ".env"
+  ],
+  "pipeline": {
+    "build": {
+      "dotEnv": [
+        ".env.production.local",
+        ".env.local",
+        ".env.production",
+        ".env"
+      ],
+      "env": [
+        "TENANT_SERVICE_PORT"
+      ],
+      "dependsOn": [
+        "^build",
+        "^db:generate"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "./dist/**"
+      ]
+    },
+    "lint": {},
+    "test": {
+      "dotEnv": [
+        ".env.test.local",
+        ".env.test",
+        ".env"
+      ]
+    },
+    "dev": {
+      "dependsOn": [
+        "^db:generate"
+      ],
+      "cache": false,
+      "persistent": true,
+      "dotEnv": [
+        ".env.development.local",
+        ".env.local",
+        ".env.development",
+        ".env"
+      ]
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false
+    }
+  }
+}

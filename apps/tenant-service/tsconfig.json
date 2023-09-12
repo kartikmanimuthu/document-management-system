@@ -1,0 +1,10 @@
+{
+  "extends": "tsconfig/base.json",
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "global.d.ts"],
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "ESNext",
+    "outDir": "build",
+    "rootDir": "src"
+  }
+}
