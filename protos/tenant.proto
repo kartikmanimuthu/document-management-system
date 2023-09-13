@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package tenant;
+
+import "google/protobuf/timestamp.proto";
+
+
+service TenantService {
+  rpc CreateTenant (CreateTenantRequest) returns (TenantResponse);
+  rpc GetTenant (GetTenantRequest) returns (TenantResponse);
+  rpc GetTenantById (GetTenantRequest) returns (TenantResponse);
+  rpc GetAllTenants (GetAllTenantsRequest) returns (TenantsListResponse);
+  rpc UpdateTenant (UpdateTenantRequest) returns (TenantResponse);
+  rpc DeleteTenant (DeleteTenantRequest) returns (TenantResponse);
+}
+
+message CreateTenantRequest {
+  string name = 1;
+}
+
+message GetTenantRequest {
+  string id = 1;
+}
+
+message GetAllTenantsRequest {
+}
+
+message UpdateTenantRequest {
+  string id = 1;
+  string name = 2;
+}
+
+message DeleteTenantRequest {
+  string id = 1;
+}
+
+message TenantResponse {
+  string id = 1;
+  string name = 2;
+  string createdAt = 3;
+  string updatedAt = 4;
+}
+
+message TenantsListResponse {
+  repeated TenantResponse tenants = 1;
+}
