@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { client } from '../grpc-client';
+import { tenantClient as client } from '../grpc-client';
 
 const router = express.Router();
 
@@ -28,21 +28,28 @@ const router = express.Router();
  * /tenant:
  *  post:
  *    description: Create a new tenant
- *    produces:
- *      - application/json
- *    parameters:
- *      - name: name
- *        description: Tenant name.
- *        in: formData
- *        required: true
- *        type: string
+ *    tags:
+ *      - Tenants
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                description: Tenant name.
+ *                type: string
+ *            required:
+ *              - name
  *    responses:
  *      200:
  *        description: Successfully created
  */
 router.post('/tenant', (req: Request, res: Response) => {
+    global.logger.debug(req.body);
     global.logger.info('Creating a new tenant...', { ...req.body });
-    client.CreateTenant(req.body, (error: Error, tenant: unknown) => {
+    client.CreateTenant({ ...req.body }, (error: Error, tenant: unknown) => {
         if (error) {
             global.logger.error(`Failed to create tenant: ${error.message}`);
             res.status(500).json({ error: 'Failed to create tenant' });
@@ -54,11 +61,14 @@ router.post('/tenant', (req: Request, res: Response) => {
 });
 
 
+
 /**
  * @swagger
  * /tenant:
  *  get:
  *    description: Retrieve all tenants
+ *    tags:
+ *      - Tenants
  *    produces:
  *      - application/json
  *    responses:
@@ -95,6 +105,8 @@ router.get('/tenant', (req: Request, res: Response) => {
  * /tenant/{id}:
  *  get:
  *    description: Retrieve a tenant
+ *    tags:
+ *      - Tenants
  *    produces:
  *      - application/json
  *    parameters:
@@ -127,24 +139,49 @@ router.get('/tenant/:id', (req: Request, res: Response) => {
 /**
  * @swagger
  * /tenant/{id}:
- *  put:
- *    description: Update a tenant
- *    produces:
- *      - application/json
- *    parameters:
- *      - name: id
- *        description: Tenant's ID.
- *        in: path
- *        required: true
- *        type: string
- *      - name: name
- *        description: Tenant name.
- *        in: formData
- *        required: true
- *        type: string
- *    responses:
- *      200:
- *        description: Successfully updated
+ *   put:
+ *     summary: Update a tenant
+ *     tags:
+ *       - Tenants
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the tenant to update
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       description: Tenant's new data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: New name of the tenant
+ *     responses:
+ *       200:
+ *         description: Tenant updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *       500:
+ *         description: Failed to update tenant
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
  */
 router.put('/tenant/:id', (req: Request, res: Response) => {
     global.logger.info(`Updating tenant with ID: ${req.params.id}`);
@@ -152,6 +189,7 @@ router.put('/tenant/:id', (req: Request, res: Response) => {
         id: req.params.id,
         ...req.body
     };
+    global.logger.debug('Updating tenant payload : ', updateData);
 
     client.UpdateTenant(updateData, (error: Error, response: unknown) => {
         if (error) {
@@ -169,6 +207,8 @@ router.put('/tenant/:id', (req: Request, res: Response) => {
  * /tenant/{id}:
  *  delete:
  *    description: Delete a tenant
+ *    tags:
+ *      - Tenants
  *    produces:
  *      - application/json
  *    parameters:

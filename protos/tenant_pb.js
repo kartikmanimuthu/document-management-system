@@ -1747,7 +1747,8 @@ proto.tenant.UpdateUserRequest.toObject = function(includeInstance, msg) {
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     username: jspb.Message.getFieldWithDefault(msg, 2, ""),
     password: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    email: jspb.Message.getFieldWithDefault(msg, 4, "")
+    email: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    tenantid: jspb.Message.getFieldWithDefault(msg, 5, "")
   };
 
   if (includeInstance) {
@@ -1799,6 +1800,10 @@ proto.tenant.UpdateUserRequest.deserializeBinaryFromReader = function(msg, reade
     case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setEmail(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTenantid(value);
       break;
     default:
       reader.skipField();
@@ -1854,6 +1859,13 @@ proto.tenant.UpdateUserRequest.serializeBinaryToWriter = function(message, write
   if (f.length > 0) {
     writer.writeString(
       4,
+      f
+    );
+  }
+  f = message.getTenantid();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
       f
     );
   }
@@ -1929,6 +1941,24 @@ proto.tenant.UpdateUserRequest.prototype.getEmail = function() {
  */
 proto.tenant.UpdateUserRequest.prototype.setEmail = function(value) {
   return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional string tenantID = 5;
+ * @return {string}
+ */
+proto.tenant.UpdateUserRequest.prototype.getTenantid = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.tenant.UpdateUserRequest} returns this
+ */
+proto.tenant.UpdateUserRequest.prototype.setTenantid = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 

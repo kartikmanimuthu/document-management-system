@@ -71,6 +71,7 @@ message UpdateUserRequest {
   string username = 2;
   string password = 3;
   string email = 4;
+  string tenantID = 5;
 }
 
 message DeleteUserRequest {

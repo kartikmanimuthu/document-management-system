@@ -5,9 +5,9 @@ const PROTO_PATH = __dirname + '/../../protos/tenant.proto';
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {});
 const tenantProto: any = grpc.loadPackageDefinition(packageDefinition).tenant;
 
-const client = new tenantProto.TenantService('localhost:50051', grpc.credentials.createInsecure());
-
+const tenantClient = new tenantProto.TenantService('localhost:50051', grpc.credentials.createInsecure());
+const userClient = new tenantProto.UserService('localhost:50051', grpc.credentials.createInsecure());
 
 export {
-    client
+    userClient, tenantClient
 }

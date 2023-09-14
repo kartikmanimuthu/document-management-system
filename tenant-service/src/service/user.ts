@@ -32,21 +32,24 @@ const validatePassword = async (inputPassword: string, storedPasswordHash: strin
 
 
 const CreateUser = async (call: any, callback: any) => {
-    const { username, password, email } = call.request;
+    const { tenantID, username, password, email } = call.request;
     try {
         const salt = generateSalt();
         const hashedPassword = await hashPassword(password, salt);
 
         const user = new User({
+            tenantID,
             username,
             password: hashedPassword,
             salt,
             email
         });
-
+        global.logger.info(`[user.ts] [CreateUser] payload :`, user);
         const savedUser = await user.save();
+        global.logger.debug(`[user.ts] [CreateUser] docs :`, savedUser);
         callback(null, savedUser);
     } catch (error) {
+        global.logger.debug(`[user.ts] [CreateUser] Error :`, error);
         callback({
             code: grpc.status.INTERNAL,
             details: "Failed to create user"
@@ -88,12 +91,13 @@ const GetUser = async (call: any, callback: any) => {
 }
 
 const UpdateUser = async (call: any, callback: any) => {
-    const { id, username, password, email } = call.request;
+    const { id, username, password, email, tenantID } = call.request;
     try {
         const salt = generateSalt();
         const hashedPassword = await hashPassword(password, salt);
 
         const updatedUser = await User.findByIdAndUpdate(id, {
+            tenantID,
             username,
             password: hashedPassword,
             salt,

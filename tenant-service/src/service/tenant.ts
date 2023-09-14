@@ -4,11 +4,14 @@ import { Tenant, ITenant } from '../models/tenant';
 
 const CreateTenant = async (call: any, callback: any) => {
     const { name } = call.request;
+    global.logger.info('[tenant.ts] [CreateTenant] Payload', name);
     try {
         const tenant = new Tenant({ name });
         const docs = await tenant.save();
+        global.logger.debug('[tenant.ts] [CreateTenant] docs', docs);
         callback(null, docs);
     } catch (error) {
+        global.logger.error('[tenant.ts] [CreateTenant] error :', (error as Error).message);
         callback({
             code: grpc.status.INTERNAL,
             details: "Failed to create tenant"

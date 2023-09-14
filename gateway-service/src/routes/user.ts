@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { client } from '../grpc-client';
+import { userClient as client } from '../grpc-client';
 import grpc from '@grpc/grpc-js';
 
 const router = express.Router();
@@ -63,7 +63,7 @@ const router = express.Router();
  *             properties:
  *               name:
  *                 type: string
- *               tenantId:
+ *               tenantID:
  *                 type: string
  *               username:
  *                 type: string
@@ -78,13 +78,17 @@ const router = express.Router();
  *         description: Failed to create user
  */
 router.post('/user', async (req: Request, res: Response) => {
+    global.logger.info("[user.ts] [CreateUser] : ", req.body);
 
     client.CreateUser({ ...req.body }, (error: grpc.ServiceError, response: unknown) => {
         if (error) {
             global.logger.error(`Error creating user: ${error.details}`);
             return res.status(500).json({ error: error.details });
         }
-        res.json(response);
+        else {
+            global.logger.debug(`User Created Succssfully:`, response);
+            res.json(response);
+        }
     });
 });
 
@@ -174,7 +178,7 @@ router.get('/user', (req: Request, res: Response) => {
  *             properties:
  *               name:
  *                 type: string
- *               tenantId:
+ *               tenantID:
  *                 type: string
  *               username:
  *                 type: string
@@ -193,14 +197,18 @@ router.get('/user', (req: Request, res: Response) => {
 router.put('/user/:id', (req: Request, res: Response) => {
     global.logger.info(`Updating user: ${req.params.id}`);
     const { id } = req.params;
-    const { username, password, email } = req.body;
+    const { username, password, email, tenantID } = req.body;
 
     const updateUserRequest = {
         id,
         username,
         password,
-        email
+        email,
+        tenantID
     };
+
+
+    global.logger.info("[user.ts] [UpdateUser] Payload: ", updateUserRequest);
 
     client.UpdateUser(updateUserRequest, (error: grpc.ServiceError, response: unknown) => {
         if (error) {
