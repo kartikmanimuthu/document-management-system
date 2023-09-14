@@ -6,6 +6,7 @@ import * as protoLoader from '@grpc/proto-loader';
 
 import Database from './database';
 import * as tenantRpc from './service/tenant';
+import * as userRpc from './service/user';
 
 const PROTO_PATH = __dirname + '/../../protos/tenant.proto';
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {});
@@ -13,7 +14,7 @@ const tenantProto: any = grpc.loadPackageDefinition(packageDefinition).tenant;
 const server = new grpc.Server();
 
 server.addService(tenantProto.TenantService.service, {
-    ...tenantRpc
+    ...tenantRpc, ...userRpc
 });
 
 

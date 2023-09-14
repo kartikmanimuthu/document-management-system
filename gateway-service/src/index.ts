@@ -1,15 +1,19 @@
 import express from "express";
+import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+
+import swaggerSpec from './swaggerDef';
 
 import { serviceConfig } from './config'
 import tenantRoutes from './routes/tenant'
-import { router as userRoutes } from './routes/user'
+import userRoutes from './routes/user'
 import { initGlobalLogger } from "./logger";
 
 initGlobalLogger();
 const app = express();
+app.use(express.json()); // Middleware to parse JSON payloads
 
-// Middleware to parse JSON payloads
-app.use(express.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
 
 app.use(`${serviceConfig.basePath}`, tenantRoutes);

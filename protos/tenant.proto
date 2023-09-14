@@ -44,3 +44,50 @@ message TenantResponse {
 message TenantsListResponse {
   repeated TenantResponse tenants = 1;
 }
+
+
+// User related messages and service
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (UserResponse);
+  rpc GetUser (GetUserRequest) returns (UserResponse);
+  rpc GetAllUsers (EmptyRequest) returns (AllUsersResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (UserResponse);
+}
+
+message CreateUserRequest {
+  string tenantID = 1;
+  string username = 2;
+  string password = 3;
+  string email = 4;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string username = 2;
+  string password = 3;
+  string email = 4;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message UserResponse {
+  string id = 1;
+  string tenantID = 2;
+  string username = 3;
+  string email = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message AllUsersResponse {
+  repeated UserResponse users = 1;
+}
+
+message EmptyRequest {}
