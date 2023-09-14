@@ -1,0 +1,38 @@
+{
+  "name": "document-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.ts",
+  "types": "index.d.ts",
+  "scripts": {
+    "type-check": "tsc",
+    "clean": "rm -rf build",
+    "build:grpc": "npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:../protos --grpc_out=grpc_js:../protos --proto_path=../protos ../protos/*.proto",
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=build/index.js --external:express,dotenv",
+    "dev": "npm run build:grpc && tsx watch src/index.ts",
+    "prestart": "npm run clean && npm run build:grpc && npm run build",
+    "start": "node build/index.js",
+    "lint": "eslint \"{src,test}/*.ts\" --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/mongoose": "^5.11.97",
+    "dotenv": "^16.3.1",
+    "mongoose": "^7.5.1",
+    "pino": "^8.15.1"
+  },
+  "devDependencies": {
+    "@grpc/grpc-js": "^1.9.2",
+    "@grpc/proto-loader": "^0.7.9",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.5.0",
+    "@types/pino": "^7.0.5",
+    "esbuild": "^0.19.2",
+    "grpc-tools": "^1.12.4",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
+  }
+}
