@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   mongodb:
@@ -11,6 +11,28 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+    
+  document-service:
+    build:
+      context: .
+      dockerfile: document-service/Dockerfile
+    depends_on:
+      - mongodb
+
+  tenant-service:
+    build:
+      context: .
+      dockerfile: tenant-service/Dockerfile
+    depends_on:
+      - mongodb
+
+  gateway-service:
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    depends_on:
+      - document-service
+      - tenant-service
 
 volumes:
   mongodb_data:

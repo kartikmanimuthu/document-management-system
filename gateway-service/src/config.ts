@@ -5,5 +5,5 @@ dotenv.config({ path: '../.env' }); // Load environment variables from .env file
 export const serviceConfig = {
   name: "Gateway service",
   basePath: "/gateway/v1",
-  port: process.env.GATEWAY_SERVICE_PORT as unknown as number
+  port: process.env.GATEWAY_SERVICE_PORT as unknown as number || 8000
 }
