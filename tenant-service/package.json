@@ -10,7 +10,7 @@
     "clean": "rm -rf build",
     "build:grpc": "npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:../protos --grpc_out=grpc_js:../protos --proto_path=../protos ../protos/*.proto",
     "build": "esbuild src/index.ts --bundle --platform=node --outfile=build/index.js --external:express,dotenv",
-    "dev": "npm run build:grpc && tsx watch src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "prestart": "npm run clean && npm run build:grpc && npm run build",
     "start": "node build/index.js",
     "lint": "eslint \"{src,test}/*.ts\" --fix",

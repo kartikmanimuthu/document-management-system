@@ -11,7 +11,7 @@ import { initGlobalLogger } from "./logger";
 
 initGlobalLogger();
 
-const PROTO_PATH = __dirname + '/../../protos/tenant.proto';
+const PROTO_PATH = __dirname + '/../../protos/src/tenant.proto';
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {});
 const tenantProto: any = grpc.loadPackageDefinition(packageDefinition).tenant;
 const server = new grpc.Server();

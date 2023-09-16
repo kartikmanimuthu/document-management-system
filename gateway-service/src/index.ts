@@ -7,6 +7,8 @@ import swaggerSpec from './swaggerDef';
 import { serviceConfig } from './config'
 import tenantRoutes from './routes/tenant'
 import userRoutes from './routes/user'
+import folderRoutes from './routes/folder'
+import fileRoutes from './routes/file'
 import { initGlobalLogger } from "./logger";
 
 initGlobalLogger();
@@ -19,6 +21,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: t
 
 app.use(`${serviceConfig.basePath}`, tenantRoutes);
 app.use(`${serviceConfig.basePath}`, userRoutes);
+app.use(`${serviceConfig.basePath}`, folderRoutes);
+app.use(`${serviceConfig.basePath}`, fileRoutes);
 
 app.use((err: any, req: any, res: any, next: any) => {
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {

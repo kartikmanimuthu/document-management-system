@@ -1,7 +1,7 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 
-const PROTO_PATH = __dirname + '/../../protos/tenant.proto';
+const PROTO_PATH = __dirname + '/../../protos/src/tenant.proto';
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {});
 const tenantProto: any = grpc.loadPackageDefinition(packageDefinition).tenant;
 
@@ -11,3 +11,6 @@ const userClient = new tenantProto.UserService('localhost:50051', grpc.credentia
 export {
     userClient, tenantClient
 }
+
+
+

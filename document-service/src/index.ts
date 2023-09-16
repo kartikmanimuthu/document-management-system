@@ -5,23 +5,23 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 
 import Database from './database';
-import * as tenantRpc from './service/tenant';
-import * as userRpc from './service/user';
+import * as fileService from './service/file';
+import * as folderService from './service/folder';
 import { initGlobalLogger } from "./logger";
 
 initGlobalLogger();
 
-const PROTO_PATH = __dirname + '/../../protos/tenant.proto';
+const PROTO_PATH = __dirname + '/../../protos/src/document.proto';
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {});
-const tenantProto: any = grpc.loadPackageDefinition(packageDefinition).tenant;
+const documentProto: any = grpc.loadPackageDefinition(packageDefinition).document;
 const server = new grpc.Server();
 
-server.addService(tenantProto.TenantService.service, {
-    ...tenantRpc
+server.addService(documentProto.FileService.service, {
+    ...fileService
 });
 
-server.addService(tenantProto.UserService.service, {
-    ...userRpc
+server.addService(documentProto.FolderService.service, {
+    ...folderService
 });
 
 

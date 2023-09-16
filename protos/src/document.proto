@@ -1,0 +1,140 @@
+syntax = "proto3";
+
+package document;
+
+
+// File Service
+service FileService {
+    rpc UploadFile(FileUploadRequest) returns (UploadStatus);
+    rpc GetFile(GetFileRequest) returns (FileResponse);
+    rpc DeleteFile(DeleteFileRequest) returns (DeleteStatus);
+    rpc UpdateFile(UpdateFileRequest) returns (FileResponse);
+    rpc GetAllFiles(GetAllFilesRequest) returns (FilesResponse);
+}
+
+// Request to upload a file
+message FileUploadRequest {
+    string ownerid = 1;
+    string folderid = 2;
+    string contenttype = 4;
+    string name = 3;
+    bytes content = 5; // Storing the file as bytes
+}
+
+// Status after trying to upload a file
+message UploadStatus {
+    bool success = 1;
+    string message = 2;
+}
+
+// Request to get a file by its id
+message GetFileRequest {
+    string id = 1;
+}
+
+// Represents a single file
+message FileResponse {
+    string id = 1;
+    string ownerid = 2;
+    string folderid = 3;
+    string name = 4;
+    string contenttype = 5;
+    bytes content = 6; // Storing the file as bytes
+    string created_at = 7;
+    string updated_at = 8;
+}
+
+// Request to delete a file
+message DeleteFileRequest {
+    string id = 1;
+}
+
+// Status after trying to delete a file
+message DeleteStatus {
+    bool success = 1;
+    string message = 2;
+}
+
+// Request to update a file
+message UpdateFileRequest {
+    string id = 1;
+    string ownerid = 2;
+    string folderid = 3;
+    string name = 4;
+    string contentType = 5;
+    bytes content = 6; // Storing the file as bytes
+}
+
+// Request to get all files
+message GetAllFilesRequest {
+    string ownerId = 1;
+}
+
+// Response containing multiple files
+message FilesResponse {
+    repeated FileResponse files = 1;
+}
+
+
+
+
+
+// ################################################################################################################################
+
+
+// Service to manage folders
+service FolderService {
+  rpc CreateFolder(FolderCreateRequest) returns (FolderStatus);
+  rpc GetFolder(FolderGetRequest) returns (FolderResponse);
+  rpc UpdateFolder(FolderUpdateRequest) returns (FolderStatus);
+  rpc DeleteFolder(FolderDeleteRequest) returns (FolderStatus);
+  rpc GetRootFolder(RootFolderRequest) returns (FolderResponse);
+  rpc CreateRootFolder(RootFolderRequest) returns (FolderStatus);
+  rpc GetFolderContent(FolderGetRequest) returns (FolderResponse);
+  
+}
+
+// Messages
+
+// For creating a new folder
+message FolderCreateRequest {
+  string name = 1;
+  string owner_id = 2;
+  string parent_folder_id = 3; // Empty for root folder
+}
+
+// For getting details of a folder
+message FolderGetRequest {
+  string id = 1;
+}
+
+// For updating a folder's name or parentFolderId
+message FolderUpdateRequest {
+  string id = 1;
+  string newName = 2;
+  string parent_folder_id = 3; // Optional, can be empty if no change
+}
+
+// For deleting a folder
+message FolderDeleteRequest {
+  string id = 1;
+}
+
+// For getting the root folder of a user
+message RootFolderRequest {
+  string ownerid = 1;
+}
+
+// Response containing folder details
+message FolderResponse {
+  string id = 1;
+  string name = 2;
+  repeated string file_ids = 3; // List of file IDs inside this folder
+  repeated string sub_folder_ids = 4; // List of sub-folder IDs inside this folder
+}
+
+// General status response
+message FolderStatus {
+  bool success = 1;
+  string message = 2;
+}
